@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Mansjoer\Fonnte\Facades\Fonnte;
 
 
 
@@ -126,6 +127,8 @@ class PayController extends Controller
         $imageUrl = $result['data']['url'];
         $tiket->bukti = $imageUrl;
         $tiket->save();
+
+        Fonnte::sendMessage('62895366575360', 'ada bukti pembayaran baru dari ' . $tiket->nama . ' dengan order id ' . $tiket->order_id . ' dan foto ' . $tiket->bukti . ' dengan metode bayar ' . $tiket->metodebayar);
 
         return response()->json([
             'success' => true,
