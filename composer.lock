@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "acb68fe1249b26f0c342b4ca9f5aaaf8",
+    "content-hash": "44237871949e1e1e72ef8ba995542f7b",
     "packages": [
         {
             "name": "brick/math",
@@ -2069,6 +2069,57 @@
                 }
             ],
             "time": "2024-12-08T08:18:47+00:00"
+        },
+        {
+            "name": "mansjoer/fonnte",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Mansjoer/fonnte.git",
+                "reference": "0746dfdf7f29631a703646cd6918acd5bfcda2ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Mansjoer/fonnte/zipball/0746dfdf7f29631a703646cd6918acd5bfcda2ff",
+                "reference": "0746dfdf7f29631a703646cd6918acd5bfcda2ff",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.9",
+                "php": "^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Fonnte": "Mansjoer\\Fonnte\\Facades\\Fonnte"
+                    },
+                    "providers": [
+                        "Mansjoer\\Fonnte\\Providers\\FonnteServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Mansjoer\\Fonnte\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aditya Ramadhana",
+                    "email": "ramabljredit@gmail.com"
+                }
+            ],
+            "description": "Integrasi Laravel dengan WhatsApp Fonnte API",
+            "support": {
+                "issues": "https://github.com/Mansjoer/fonnte/issues",
+                "source": "https://github.com/Mansjoer/fonnte/tree/v1.0.3"
+            },
+            "time": "2025-04-24T00:14:27+00:00"
         },
         {
             "name": "monolog/monolog",

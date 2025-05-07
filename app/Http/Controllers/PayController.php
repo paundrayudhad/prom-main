@@ -73,7 +73,7 @@ class PayController extends Controller
             'phone' => $request->phone,
             'kelas' => $paymentData['kelas'],
             'jumlah_tiket' => $paymentData['bawa_tamu'] ? 2 : 1,
-            'harga' => $paymentData['harga'] * 1.11, // Include tax
+            'harga' => $paymentData['harga'], // Include tax
             'metodebayar' => $request->metodebayar,
             'status' => 'pending'
         ]);
@@ -99,13 +99,31 @@ class PayController extends Controller
 
     try {
         $newFileName = 'bukti_' . Str::slug($tiket->nama, '_') . '.' . $file->getClientOriginalExtension();
+        $response = Http::asMultipart()
+            ->attach(
+            'image',
+            fopen($file->getRealPath(), 'r'),
+            $newFileName
+            )
+            ->post('https://api.imgbb.com/1/upload?key=' . env('IMGBB_API_KEY'));
 
-        // Simpan file ke folder 'bukti' di penyimpanan publik
-        $path = $file->storeAs('bukti', $newFileName, 'public');
+        $result = $response->json();
 
-        // Ambil URL-nya
-        $imageUrl = Storage::url($path);
+        if (!$response->successful() || !isset($result['data']['url'])) {
+            Log::error('Gagal upload gambar ke imgbb.', [
+                'response_status' => $response->status(),
+                'response_body' => $response->body(),
+                'file_name' => $file->getClientOriginalName(),
+                'order_id' => $request->order_id,
+            ]);
 
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal upload gambar ke imgbb.'
+            ]);
+        }
+
+        $imageUrl = $result['data']['url'];
         $tiket->bukti = $imageUrl;
         $tiket->save();
 
@@ -122,6 +140,5 @@ class PayController extends Controller
         ]);
     }
 }
-
 
 }

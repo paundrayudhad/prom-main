@@ -16,7 +16,7 @@
                 </div>
                 <h4 id="payment-success-title" class="text-2xl font-semibold text-gray-800 mb-4">Bukti Pembayaran Terkirim!</h4>
                 <p class="text-gray-600 mb-6">
-                    Terima kasih telah melakukan pembayaran. Kami akan memverifikasi pembayaran Anda dalam waktu maksimal <strong>2x24 jam</strong>, dan detail tiket akan dikirim ke email Anda.
+                    Terima kasih telah melakukan pembayaran. Kami akan memverifikasi pembayaran Anda dalam waktu maksimal <strong>2x24 jam</strong>, dan detail tiket akan dikirim ke email Anda, silahkan cek bagian SPAM.
                 </p>
                 <p class="text-gray-600 mb-6">
                     ID Pesanan Anda: <strong>{{ request()->query('order_id') }}</strong>
@@ -31,7 +31,7 @@
     <script>
         setTimeout(function () {
             window.location.href = '/pesan'; // Ganti ke halaman yang sesuai
-        }, 3000);
+        }, 3600);
     </script>
 </body>
 </html>

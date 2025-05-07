@@ -214,7 +214,7 @@
             const nis = document.getElementById('nis').value;
             const namaSiswa = document.getElementById('siswaNama').textContent.replace('Nama: ', '');
             const kelas = document.getElementById('siswaKelas').textContent.replace('Kelas: ', '');
-            const totalPrice = 150000; // Fixed price without tamu
+            const totalPrice = 140000; // Fixed price without tamu
 
             // Set values in hidden form
             document.getElementById('nisInput').value = nis;

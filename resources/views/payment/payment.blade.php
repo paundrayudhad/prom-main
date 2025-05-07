@@ -64,7 +64,7 @@
                                 <p class="font-bold">Total Bayar:</p>
                             </div>
                             <div class="text-right font-medium">
-                                <p class="mb-2">1 x Rp 150.000</p>
+                                <p class="mb-2">1 x Rp {{ $harga }}</p>
                                 @if($bawa_tamu)
                                 <p class="mb-2">1 x Rp 405.000</p>
                                 @endif
@@ -83,7 +83,7 @@
                         <input type="hidden" name="kelas" value="{{ $kelas }}">
                         <input type="hidden" name="bawa_tamu" value="{{ $bawa_tamu }}">
                         <input type="hidden" name="harga" value="{{ $harga }}">
-                        <input type="hidden" name="grandtotal" value="{{ $harga * 1.11 }}">
+                        <input type="hidden" name="grandtotal" value="{{ $harga }}">
 
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-700">Alamat Email</label>
@@ -114,9 +114,9 @@
                                     <span>BCA Virtual Account</span>
                                 </label>
                                 <label class="flex items-center gap-2">
-                                    <input type="radio" name="metodebayar" value="mandiri"
+                                    <input type="radio" name="metodebayar" value="dana"
                                         class="text-blue-600 focus:ring-blue-500 border-gray-300">
-                                    <span>Mandiri Virtual Account</span>
+                                    <span>DANA</span>
                                 </label>
                             </div>
                         </div>

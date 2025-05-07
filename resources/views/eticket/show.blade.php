@@ -55,7 +55,7 @@
 
       <div class="text-center text-sm text-gray-600 mt-6">
         <p>✨ Let’s make this night magical together ✨</p>
-        <p class="mt-2">Questions? Whatsapp us at <a href="https://wa.me/6281234567890" class="underline text-purple-800">+6281234567890</a></p>
+        <p class="mt-2">Questions? Whatsapp us at <a href="https://wa.me/6281234567890" class="underline text-purple-800">+62895366575360</a></p>
       </div>
 
     </div>

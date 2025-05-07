@@ -33,15 +33,15 @@
               <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <h6 class="font-medium mb-2">Bank BCA Virtual Account:</h6>
                 <p>Bank: BCA</p>
-                <p>Nomor Rekening: 1234567890</p>
-                <p class="mb-4">Atas Nama: Your Company Name</p>
+                <p>Nomor Rekening: 7738042449</p>
+                <p class="mb-4">Atas Nama: Kania Elvira Putri Kinasih</p>
               </div>
-              @elseif($tiket->metodebayar === 'mandiri')
+              @elseif($tiket->metodebayar === 'dana')
               <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <h6 class="font-medium mb-2">Bank Mandiri Virtual Account:</h6>
-                <p>Bank: Mandiri</p>
-                <p>Nomor Rekening: 0987654321</p>
-                <p class="mb-4">Atas Nama: Your Company Name</p>
+                <h6 class="font-medium mb-2">DANA :</h6>
+                <p>E-MONEY: DANA</p>
+                <p>Nomor Rekening: 085602677951</p>
+                <p class="mb-4">Atas Nama: Kania Elvira Putri Kinasih</p>
               </div>
               @else
               <div class="text-red-600 font-semibold">

@@ -57,4 +57,4 @@ Model `Tiket` menyimpan informasi berikut:
 
 ---
 
-Made with ❤️ by [Paundra](https://github.com/paundrayudhad)
+Made with ❤️ by [Raaki30](https://github.com/Raaki30)
