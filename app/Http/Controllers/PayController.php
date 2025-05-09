@@ -112,7 +112,7 @@ class PayController extends Controller
 
             $imageUrl = $result['data']['url'];
             $imageUrl = str_replace('ibb.co', 'ibb.co.com', $imageUrl);
-            Log::info('Hasil response dari imgbb:', $result);
+            // Log::info('Hasil response dari imgbb:', $result);
 
             // Create Tiket record
             $tiket = Tiket::create([
