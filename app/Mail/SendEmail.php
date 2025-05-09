@@ -23,7 +23,6 @@ class SendEmail extends Mailable
     {
         $this->data = $data;
         
-        
     }
 
     /**
@@ -36,7 +35,7 @@ class SendEmail extends Mailable
     {
         return new Envelope(
             subject: 'Hooray!! Your Invitation is Here',
-            replyTo: 'rafifradina@gmail.com',
+            replyTo: 'paundra461@gmail.com',
         );
     }
  /**

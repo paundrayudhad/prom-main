@@ -3,9 +3,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Tiket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
+use App\Libraries\Whatsapp;
 
 class TiketController extends Controller
 {
@@ -33,8 +35,34 @@ class TiketController extends Controller
         ];
 
         Mail::to($tiket->email)->send(new SendEmail($data));
+        
 
-    
+        $message = $message = "Hai {$data['nama']},
+        
+        Kamu telah berhasil memesan tiket untuk acara *Heptasyn - Prom Night*.
+        
+        Klik link di bawah ini untuk melihat e-ticket kamu (ada QR code dan detail tiketnya):
+        {$data['url']}
+        
+        Pastikan untuk menunjukkan QR code tersebut saat tiba di acara.
+        _Jangan sebarkan link ini ke orang lain ya!_
+        
+        Butuh bantuan? Hubungi kami via WhatsApp:
+        https://wa.me/6282180833304
+        
+        © 2025 Panitia Atas Nama Masa Muda";
+
+        $token = '6bc04737-5845-4f44-b41a-f2b9fc3c5545';
+        $target = preg_replace('/^08/', '628', $tiket->phone);
+
+        $sendwa = Http::withHeaders([
+            'Authorization' => 'Bearer'. $token,
+        ])->get('http://wa.kesini.my.id/api/send-message', [
+            'number' => 6282328006873,
+            'target' => $target,
+            'message' => $message
+        ]);
+        
 
         return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi.');
     }

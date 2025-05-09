@@ -9,10 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-
-
-
+use Mansjoer\Fonnte\Facades\Fonnte;
 
 class PayController extends Controller
 {
@@ -43,102 +40,117 @@ class PayController extends Controller
             'harga' => 'required|numeric|min:0'
         ]);
 
-        // Store the initial data in session
-        Session::put('payment_data', $request->all());
-        return view('payment.payment', $request->all());
+        $order_id = 'ORDER-' . Str::random(8);
+
+        $paymentData = array_merge($request->all(), ['order_id' => $order_id]);
+        Session::put('payment_data', $paymentData);
+
+        return view('payment.payment', $paymentData);
     }
-
-
 
     public function processPayment(Request $request)
     {
         $request->validate([
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:20',
-            'metodebayar' => 'required|in:bca,mandiri'
+            'metodebayar' => 'required|in:bca,dana'
         ]);
 
-        if (!session()->has('payment_data')) {
+        if (!Session::has('payment_data')) {
             return redirect()->route('pesan');
         }
 
-        $paymentData = session('payment_data');
-        $order_id = 'ORDER-' . Str::random(8);
+        $paymentData = Session::get('payment_data');
 
-        $tiket = Tiket::create([
-            'order_id' => $order_id,
-            'nis' => $paymentData['nis'],
-            'nama' => $paymentData['nama_siswa'],
+        // Update session with email, phone, and metodebayar
+        $paymentData = array_merge($paymentData, [
             'email' => $request->email,
             'phone' => $request->phone,
-            'kelas' => $paymentData['kelas'],
-            'jumlah_tiket' => $paymentData['bawa_tamu'] ? 2 : 1,
-            'harga' => $paymentData['harga'], // Include tax
-            'metodebayar' => $request->metodebayar,
-            'status' => 'pending'
+            'metodebayar' => $request->metodebayar
         ]);
+        Session::put('payment_data', $paymentData);
 
-
-
-        return view('payment.instructions', compact('tiket'));
+        return view('payment.instructions', ['tiket' => (object) $paymentData]);
     }
 
-
-
-
-
     public function uploadbukti(Request $request)
-{
-    $request->validate([
-        'bukti' => 'required|image|mimes:jpeg,jpg,png|max:2048',
-        'order_id' => 'required|exists:tikets,order_id'
-    ]);
+    {
+        $request->validate([
+            'bukti' => 'required|image|mimes:jpeg,jpg,png|max:2048',
+        ]);
 
-    $file = $request->file('bukti');
-    $tiket = Tiket::where('order_id', $request->order_id)->first();
-
-    try {
-        $newFileName = 'bukti_' . Str::slug($tiket->nama, '_') . '.' . $file->getClientOriginalExtension();
-        $response = Http::asMultipart()
-            ->attach(
-            'image',
-            fopen($file->getRealPath(), 'r'),
-            $newFileName
-            )
-            ->post('https://api.imgbb.com/1/upload?key=' . env('IMGBB_API_KEY'));
-
-        $result = $response->json();
-
-        if (!$response->successful() || !isset($result['data']['url'])) {
-            Log::error('Gagal upload gambar ke imgbb.', [
-                'response_status' => $response->status(),
-                'response_body' => $response->body(),
-                'file_name' => $file->getClientOriginalName(),
-                'order_id' => $request->order_id,
-            ]);
-
+        if (!Session::has('payment_data')) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal upload gambar ke imgbb.'
+                'message' => 'Data pembayaran tidak ditemukan.'
             ]);
         }
 
-        $imageUrl = $result['data']['url'];
-        $tiket->bukti = $imageUrl;
-        $tiket->save();
+        $paymentData = Session::get('payment_data');
+        $file = $request->file('bukti');
 
-        return response()->json([
-            'success' => true,
-            'image_url' => $imageUrl,
-            'order_id' => $tiket->order_id,
-        ]);
+        try {
+            $newFileName = 'bukti_' . Str::slug($paymentData['nama_siswa'], '_') . '.' . $file->getClientOriginalExtension();
 
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-        ]);
+            $response = Http::asMultipart()
+                ->attach('image', fopen($file->getRealPath(), 'r'), $newFileName)
+                ->post('https://api.imgbb.com/1/upload?key=' . env('IMGBB_API_KEY'));
+
+            $result = $response->json();
+
+            if (!$response->successful() || !isset($result['data']['url'])) {
+                Log::error('Gagal upload gambar ke imgbb.', [
+                    'response_status' => $response->status(),
+                    'response_body' => $response->body(),
+                ]);
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal upload gambar ke imgbb.'
+                ]);
+            }
+
+            $imageUrl = $result['data']['url'];
+            $imageUrl = str_replace('ibb.co', 'ibb.co.com', $imageUrl);
+            Log::info('Hasil response dari imgbb:', $result);
+
+            // Create Tiket record
+            $tiket = Tiket::create([
+                'order_id' => $paymentData['order_id'],
+                'nis' => $paymentData['nis'],
+                'nama' => $paymentData['nama_siswa'],
+                'email' => $paymentData['email'],
+                'phone' => $paymentData['phone'],
+                'kelas' => $paymentData['kelas'],
+                'jumlah_tiket' => $paymentData['bawa_tamu'] ? 2 : 1,
+                'harga' => $paymentData['harga'],
+                'metodebayar' => $paymentData['metodebayar'],
+                'status' => 'pending',
+                'bukti' => $imageUrl
+            ]);
+
+            $message = "📢 Bukti pembayaran baru telah diterima!\n\n" .
+            "👤 Nama: {$tiket->nama}\n" .
+            "🆔 Order ID: {$tiket->order_id}\n" .
+            "💳 Metode Pembayaran: {$tiket->metodebayar}\n" .
+            "🖼️ Foto Bukti: {$imageUrl}";
+            Fonnte::sendMessage('62895366575360', $message);
+            Fonnte::sendMessage('6285600706531', $message);
+
+            // Clear session after payment complete
+            Session::forget('payment_data');
+
+            return response()->json([
+                'success' => true,
+                'image_url' => $imageUrl,
+                'order_id' => $tiket->order_id,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ]);
+        }
     }
-}
-
 }
