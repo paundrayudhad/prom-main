@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
 use App\Libraries\Whatsapp;
+use App\Helpers\WhatsAppHelper;
+
 
 class TiketController extends Controller
 {
@@ -39,30 +41,23 @@ class TiketController extends Controller
 
         $message = $message = "Hai {$data['nama']},
         
-        Kamu telah berhasil memesan tiket untuk acara *Heptasyn - Prom Night*.
+ Kamu telah berhasil memesan tiket untuk acara *Heptasyn - Prom Night*.
         
-        Klik link di bawah ini untuk melihat e-ticket kamu (ada QR code dan detail tiketnya):
-        {$data['url']}
+Klik link di bawah ini untuk melihat e-ticket kamu (ada QR code dan detail tiketnya):
+{$data['url']}
         
-        Pastikan untuk menunjukkan QR code tersebut saat tiba di acara.
-        _Jangan sebarkan link ini ke orang lain ya!_
+Pastikan untuk menunjukkan QR code tersebut saat tiba di acara.
+_Jangan sebarkan link ini ke orang lain ya!_
         
-        Butuh bantuan? Hubungi kami via WhatsApp:
-        https://wa.me/6282180833304
+Butuh bantuan? Hubungi kami via WhatsApp:
+https://wa.me/6282180833304
         
-        © 2025 Panitia Atas Nama Masa Muda";
+© 2025 Panitia Atas Nama Masa Muda";
 
         $token = '6bc04737-5845-4f44-b41a-f2b9fc3c5545';
-        $target = preg_replace('/^08/', '628', $tiket->phone);
+        $target = $tiket->phone;
 
-        $sendwa = Http::withHeaders([
-            'Authorization' => 'Bearer'. $token,
-        ])->get('http://wa.kesini.my.id/api/send-message', [
-            'number' => 6282328006873,
-            'target' => $target,
-            'message' => $message
-        ]);
-        
+       WhatsAppHelper::sendMessage($target, $message);
 
         return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi.');
     }

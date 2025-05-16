@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Mansjoer\Fonnte\Facades\Fonnte;
+use App\Helpers\WhatsAppHelper;
 
 class PayController extends Controller
 {
@@ -112,7 +113,7 @@ class PayController extends Controller
 
             $imageUrl = $result['data']['url'];
             $imageUrl = str_replace('ibb.co', 'ibb.co.com', $imageUrl);
-            // Log::info('Hasil response dari imgbb:', $result);
+            Log::info('Hasil response dari imgbb:', $result);
 
             // Create Tiket record
             $tiket = Tiket::create([
@@ -134,8 +135,8 @@ class PayController extends Controller
             "🆔 Order ID: {$tiket->order_id}\n" .
             "💳 Metode Pembayaran: {$tiket->metodebayar}\n" .
             "🖼️ Foto Bukti: {$imageUrl}";
-            Fonnte::sendMessage('62895366575360', $message);
-            Fonnte::sendMessage('6285600706531', $message);
+        WhatsAppHelper::sendMessage('62895366575360', $message);
+            WhatsAppHelper::sendMessage('6285600706531', $message);
 
             // Clear session after payment complete
             Session::forget('payment_data');

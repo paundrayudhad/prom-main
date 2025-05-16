@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hi, {{ explode(' ', trim($tiket->nama))[0] }}</title>
+  <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -21,7 +22,7 @@
       <div class="text-center">
         <p class="text-lg text-gray-700">Dear, {{ explode(' ', trim($tiket->nama))[0] }}</p>
         <h1 class="script-font text-4xl text-purple-800 font-bold">You're Invited</h1>
-        <h2 class="text-2xl mt-2">Enchanted Evening: Prom Night 2025</h2>
+        <h2 class="text-2xl mt-2">Heptasyn: Prom Night 2025</h2>
         <p class="mt-2 text-gray-600">A magical night to remember, under the stars ✨</p>
       </div>
 
@@ -55,7 +56,7 @@
 
       <div class="text-center text-sm text-gray-600 mt-6">
         <p>✨ Let’s make this night magical together ✨</p>
-        <p class="mt-2">Questions? Whatsapp us at <a href="https://wa.me/6281234567890" class="underline text-purple-800">+62895366575360</a></p>
+        <p class="mt-2">Questions? Whatsapp us at <a href="https://wa.me/6282180833304" class="underline text-purple-800">+6282180833304</a></p>
       </div>
 
     </div>
